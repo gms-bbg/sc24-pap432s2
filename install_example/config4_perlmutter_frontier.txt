@@ -1,0 +1,96 @@
+To install GAMESS on Perlmutter and Crusher/Frontier
+ 1. modify and source ../ENV/env_setup.sh for specific hardware
+ 2. Enter GAMESS directory:
+    ```./config```
+ 3. Follow all instructions from config. Once it is done, install.info file will be generated.
+    Note:
+    - GPU: Answer 'no' for all questions, except 
+           Build GAMESS with OpenMP thread support? yes
+    - CPU: using GAMESS version that is available for download from https://github.com/gms-bbg/gamess
+           for MPI version, Answer 'no' for all questions
+           for MPI/OpenMP version, Answer 'no' for all questions, except OpenMP
+ 4. Perform:
+    ```make ddi; make modules; make -j ```
+
+Below is an example of install.info for Perlmutter installation
+#!/bin/csh -f
+ 
+#   Compilation configuration for GAMESS
+#   Generated on login22
+#   Generated at Mon 15 Apr 2024 12:26:51 PM PDT
+ 
+#                 GAMESS Paths                     #
+setenv GMS_PATH              /global/u2/t/tsatta/gamess-SPD
+setenv GMS_BUILD_DIR         /global/u2/t/tsatta/gamess-SPD
+ 
+#                  Machine Type                    #
+setenv GMS_TARGET            hpe-cray-ex
+setenv GMS_HPC_SYSTEM_TARGET perlmutter
+ 
+#              FORTRAN Compiler Setup              #
+setenv GMS_FORTRAN           ftn
+ 
+#         Mathematical Library Setup               #
+setenv GMS_MATHLIB           LibSci
+setenv GMS_MATHLIB_PATH      /opt/cray/pe/libsci/23.09.1.1/NVIDIA/20.7/x86_64
+setenv GMS_LAPACK_LINK_LINE  ""
+#         parallel message passing model setup
+setenv GMS_DDI_COMM          mpi
+setenv GMS_MPI_LIB           CrayCS
+ 
+#     Michigan State University Coupled Cluster    #
+setenv GMS_MSUCC             false
+ 
+#         LIBCCHEM CPU/GPU Code Interface          #
+setenv GMS_LIBCCHEM          false
+ 
+#      Intel Xeon Phi Build: none/knc/knl          #
+setenv GMS_PHI               none
+ 
+#         Shared Memory Type: sysv/posix           #
+setenv GMS_SHMTYPE           sysv
+ 
+#      GAMESS OpenMP support: true/false           #
+setenv GMS_OPENMP            true
+ 
+#      GAMESS LibXC library: true/false            #
+setenv GMS_LIBXC             false
+ 
+#      GAMESS MDI library: true/false              #
+setenv GMS_MDI               false
+ 
+#       VM2 library: true/false                    #
+setenv  GMS_VM2              false
+ 
+#       Tinker: true/false                         #
+setenv  TINKER               false
+ 
+#       VB2000: true/false                         #
+setenv  VB2000               false
+ 
+#       XMVB: true/false                           #
+setenv  XMVB                 false
+ 
+#       NEO: true/false                            #
+setenv  NEO                  false
+ 
+#       NBO: true/false                            #
+setenv  NBO                  false
+ 
+####################################################
+# Added any additional environmental variables or  #
+# module loads below if needed.                    #
+####################################################
+# Capture floating-point exceptions                #
+setenv GMS_FPE_FLAGS        ''
+ 
+# You will want to adjust OMP_NUM_THREADS to       #
+# reflect your desired run settings.               #
+# Note that a conditional is in place to           #
+# prevent this value from overriding your          #
+# current environment if the variable exist.       #
+ 
+if (! $?OMP_NUM_THREADS ) setenv OMP_NUM_THREADS 8
+ 
+# Increase OMP_STACKSIZE if you are SEGFAULTing#
+if (! $?OMP_STACKSIZE ) setenv OMP_STACKSIZE   1G

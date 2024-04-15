@@ -1,0 +1,105 @@
+To install GAMESS on Sunspot/Aurora
+ 1. modify and source ../ENV/env_setup.sh for specific hardware
+ 2. Enter GAMESS directory:
+    ```./config```
+  with
+    - target machine name: linux64
+    - choice of FORTRAN: oneapi-ifx
+    - math library choice: mkl
+    - communication library: mpi
+    - MPI library: mpich
+ 3. Follow all instructions from config. Once it is done, install.info file will be generated.
+    Note:
+    - GPU: Answer 'no' for all questions, except 
+           Build GAMESS with OpenMP thread support? yes
+    - CPU: using GAMESS version that is available for download from https://github.com/gms-bbg/gamess
+           for MPI version, Answer 'no' for all questions
+           for MPI/OpenMP version, Answer 'no' for all questions, except OpenMP
+ 4. Perform:
+    ```./build_aot.sh```
+
+Below is an example of install.info for Sunspot installation
+#!/bin/csh -f
+ 
+#   Compilation configuration for GAMESS
+#   Generated on uan-0001
+#   Generated at Mon 15 Apr 2024 09:21:20 PM UTC
+ 
+#                 GAMESS Paths                     #
+setenv GMS_PATH              /lus/gila/projects/CSC249ADSE16_CNDA/tsatta/gamess-SPD
+setenv GMS_BUILD_DIR         /lus/gila/projects/CSC249ADSE16_CNDA/tsatta/gamess-SPD
+ 
+#                  Machine Type                    #
+setenv GMS_TARGET            linux64
+setenv GMS_HPC_SYSTEM_TARGET generic
+ 
+#              FORTRAN Compiler Setup              #
+setenv GMS_FORTRAN           oneapi-ifx
+setenv GMS_IFORT_VERNO       2022
+ 
+#         Mathematical Library Setup               #
+setenv GMS_MATHLIB           mkl
+setenv GMS_MATHLIB_PATH      /opt/aurora/23.275.2/oneapi/mkl/latest/lib/intel64
+setenv GMS_MKL_VERNO         oneapi
+setenv GMS_LAPACK_LINK_LINE  ""
+#         parallel message passing model setup
+setenv GMS_DDI_COMM          mpi
+setenv GMS_MPI_LIB           mpich
+setenv GMS_MPI_PATH          /opt/aurora/23.275.2/CNDA/mpich/52.2/mpich-ofi-all-icc-default-pmix-gpu-drop52
+ 
+#     Michigan State University Coupled Cluster    #
+setenv GMS_MSUCC             false
+ 
+#         LIBCCHEM CPU/GPU Code Interface          #
+setenv GMS_LIBCCHEM          false
+ 
+#      Intel Xeon Phi Build: none/knc/knl          #
+setenv GMS_PHI               none
+ 
+#         Shared Memory Type: sysv/posix           #
+setenv GMS_SHMTYPE           sysv
+ 
+#      GAMESS OpenMP support: true/false           #
+setenv GMS_OPENMP            true
+ 
+#      GAMESS LibXC library: true/false            #
+setenv GMS_LIBXC             false
+ 
+#      GAMESS MDI library: true/false              #
+setenv GMS_MDI               false
+ 
+#       VM2 library: true/false                    #
+setenv  GMS_VM2              false
+ 
+#       Tinker: true/false                         #
+setenv  TINKER               false
+ 
+#       VB2000: true/false                         #
+setenv  VB2000               false
+ 
+#       XMVB: true/false                           #
+setenv  XMVB                 false
+ 
+#       NEO: true/false                            #
+setenv  NEO                  false
+ 
+#       NBO: true/false                            #
+setenv  NBO                  false
+ 
+####################################################
+# Added any additional environmental variables or  #
+# module loads below if needed.                    #
+####################################################
+# Capture floating-point exceptions                #
+setenv GMS_FPE_FLAGS        '-fpe0'
+ 
+# You will want to adjust OMP_NUM_THREADS to       #
+# reflect your desired run settings.               #
+# Note that a conditional is in place to           #
+# prevent this value from overriding your          #
+# current environment if the variable exist.       #
+ 
+if (! $?OMP_NUM_THREADS ) setenv OMP_NUM_THREADS 8
+ 
+# Increase OMP_STACKSIZE if you are SEGFAULTing#
+if (! $?OMP_STACKSIZE ) setenv OMP_STACKSIZE   1G

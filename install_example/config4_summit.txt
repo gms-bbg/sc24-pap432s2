@@ -1,0 +1,14 @@
+To install GAMESS on Summit
+ 1. modify and source ../ENV/env_setup.sh for specific hardware
+ 2. Enter GAMESS directory:
+    ```./config```
+ 3. Follow all instructions from config. Once it is done, install.info file will be generated.
+    Note:
+    - GPU: Answer 'no' for all questions, except 
+           Build GAMESS with OpenMP thread support? yes
+    - CPU: using GAMESS version that is available for download from https://github.com/gms-bbg/gamess
+           for MPI version, Answer 'no' for all questions
+           for MPI/OpenMP version, Answer 'no' for all questions, except OpenMP
+ 4. Perform:
+    ```make ddi; make modules; make -j ```
+
