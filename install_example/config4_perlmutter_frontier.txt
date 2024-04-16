@@ -11,6 +11,11 @@ To install GAMESS on Perlmutter and Crusher/Frontier
            for MPI/OpenMP version, Answer 'no' for all questions, except OpenMP
  4. Perform:
     ```make ddi; make modules; make -j ```
+    Note: To perform the calculations using multithreads on the device with CCE/15.0.x compiler,
+          one have to use ```$omp target teams distribute parallel do simd```. Therefore, the codes need to be modified by
+
+    cd {gamess_folder}/
+    sed -i 's/omp target teams distribute parallel do/omp target teams distribute parallel do simd/gI' source/tgpu_ompmod*src
 
 Below is an example of install.info for Perlmutter installation
 #!/bin/csh -f
